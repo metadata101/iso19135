@@ -11,9 +11,13 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork"
 	xmlns:exslt="http://exslt.org/common"
-	exclude-result-prefixes="grg gnreg gmx xsi gmd gco gml gts xlink exslt geonet">
+	exclude-result-prefixes="grg gmx xsi gmd gco gml gts xlink exslt geonet">
 
-	<xsl:import href="metadata-iso19135-fop.xsl"/>
+	<xsl:import href="metadata-view.xsl"/>
+
+	<xsl:template name="metadata-iso19135-simple">
+		<xsl:call-template name="metadata-iso19135view-simple"/>
+	</xsl:template>
 
 	<!-- main template - the way into processing iso19135 -->
   <xsl:template name="metadata-iso19135">
@@ -23,8 +27,8 @@
 
 		<xsl:choose>
 			<!-- process in iso19135 mode if grg namespace -->
-			<xsl:when test="namespace-uri(.)='http://www.isotc211.org/2005/grg' or
-									namespace-uri()='http://geonetwork-opensource.org/register'">
+			<xsl:when test="namespace-uri()='http://www.isotc211.org/2005/grg' or
+											namespace-uri()='http://geonetwork-opensource.org/register'">
       	<xsl:apply-templates mode="iso19135" select="." >
         	<xsl:with-param name="schema" select="$schema"/>
         	<xsl:with-param name="edit"   select="$edit"/>
@@ -256,58 +260,22 @@
 
 	<xsl:template name="iso19135CompleteTab">
 		<xsl:param name="tabLink"/>
+		<xsl:param name="schema"/>
 
-		<xsl:if test="/root/gui/config/metadata-tab/advanced">
-			<xsl:call-template name="displayTab"> <!-- non existent tab - by packages -->
-				<xsl:with-param name="tab"     select="'packages'"/>
-				<xsl:with-param name="text"    select="/root/gui/strings/byPackage"/>
-				<xsl:with-param name="tabLink" select="''"/>
-			</xsl:call-template>
-			
-			<xsl:call-template name="displayTab">
-				<xsl:with-param name="tab"     select="'register'"/>
-				<xsl:with-param name="text"    select="/root/gui/schemas/iso19135/strings/registerTab"/>
-				<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
-				<xsl:with-param name="tabLink" select="$tabLink"/>
-			</xsl:call-template>
-		
-			<xsl:call-template name="displayTab">
-				<xsl:with-param name="tab"     select="'language'"/>
-				<xsl:with-param name="text"    select="/root/gui/schemas/iso19135/strings/languageTab"/>
-				<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
-				<xsl:with-param name="tabLink" select="$tabLink"/>
-			</xsl:call-template>
 
-			<xsl:call-template name="displayTab">
-				<xsl:with-param name="tab"     select="'owner'"/>
-				<xsl:with-param name="text"    select="/root/gui/schemas/iso19135/strings/ownerTab"/>
-				<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
-				<xsl:with-param name="tabLink" select="$tabLink"/>
-				<xsl:with-param name="highlighted" select="true()"/>
-			</xsl:call-template>
-
-			<xsl:call-template name="displayTab">
-				<xsl:with-param name="tab"     select="'submitter'"/>
-				<xsl:with-param name="text"    select="/root/gui/schemas/iso19135/strings/submitterTab"/>
-				<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
-				<xsl:with-param name="tabLink" select="$tabLink"/>
-				<xsl:with-param name="highlighted" select="true()"/>
-			</xsl:call-template>
-
-			<xsl:call-template name="displayTab">
-				<xsl:with-param name="tab"     select="'manager'"/>
-				<xsl:with-param name="text"    select="/root/gui/schemas/iso19135/strings/managerTab"/>
-				<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
-				<xsl:with-param name="tabLink" select="$tabLink"/>
-			</xsl:call-template>
-	
-			<xsl:call-template name="displayTab">
-				<xsl:with-param name="tab"     select="'All'"/>
-				<xsl:with-param name="text"    select="/root/gui/schemas/iso19135/strings/allTab"/>
-				<xsl:with-param name="indent"  select="'&#xA0;&#xA0;&#xA0;'"/>
-				<xsl:with-param name="tabLink" select="$tabLink"/>
-			</xsl:call-template>
-		</xsl:if>
+    <xsl:if test="/root/gui/config/metadata-tab/advanced">
+      <xsl:call-template name="mainTab">
+        <xsl:with-param name="title" select="/root/gui/strings/byPackage"/>
+        <xsl:with-param name="default">register</xsl:with-param>
+        <xsl:with-param name="menu">
+          <item label="register">register</item>
+          <item label="language">language</item>
+          <item label="owner">owner</item>
+          <item label="submitter">submitter</item>
+          <item label="manager">manager</item>
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
 
 	</xsl:template>
 	
@@ -337,7 +305,7 @@
 					</xsl:apply-templates>
 				</abstract>
 	
-				<!-- Put valid register items out as keywords -->
+				<!-- Put valid register items out as dc:subject keywords -->
       	<xsl:for-each select="grg:containedItem[*/grg:status/grg:RE_ItemStatus='valid']">
         	<keyword>
           	<xsl:apply-templates mode="localised" select="*/grg:name">
@@ -625,5 +593,20 @@
 	<!-- === Javascript used by functions in this presentation XSLT          -->
 	<!-- =================================================================== -->
 	<xsl:template name="iso19135-javascript"/>
+
+	<!-- =================================================================== -->
+	<!-- subtemplates -->
+	<!-- =================================================================== -->
+
+	<xsl:template mode="iso19135" match="*[geonet:info/isTemplate='s']" priority="3">
+		<xsl:param name="schema"/>
+		<xsl:param name="edit"/>
+		
+		<xsl:apply-templates mode="element" select=".">
+			<xsl:with-param name="schema" select="$schema"/>
+			<xsl:with-param name="edit"   select="$edit"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
 
 </xsl:stylesheet>
