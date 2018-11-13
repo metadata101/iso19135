@@ -3,6 +3,7 @@
 	<name>iso19135</name>
 	<id>700f1955-ff2f-47f9-9769-426e7668dbc3</id>
 	<version>1.0</version>
+  <appMinorVersionSupported>3.4.0</appMinorVersionSupported>
 	<schemaLocation>http://www.isotc211.org/2005/grg http://www.isotc211.org/2005/grg/grg.xsd</schemaLocation>
 	<autodetect xmlns:grg="http://www.isotc211.org/2005/grg">
 		<elements type="root">

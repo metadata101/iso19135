@@ -6,6 +6,9 @@
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
 
+  <xsl:template name="get-iso19135-title">
+    <xsl:value-of select="$metadata/grg:name/gco:CharacterString"/>
+  </xsl:template>
 
   <xsl:template name="get-iso19135-online-source-config">
     <xsl:param name="pattern"/>
@@ -28,4 +31,7 @@
 
   <xsl:template name="get-iso19135-extents-as-json">[]</xsl:template>
 
+  <xsl:template name="get-iso19135-is-service">
+    <!-- TODO -->
+  </xsl:template>
 </xsl:stylesheet>
