@@ -2348,11 +2348,11 @@
 
 
         <!-- grg namespace elements -->
-        <element name="grg:name">
+    <element name="grg:name">
         <label>Name</label>
         <description>Compact and human-readable designator</description>
     </element>
-        <element name="grg:contentSummary">
+    <element name="grg:contentSummary">
         <label>Content Summary</label>
         <description>General statement of the purpose for which items in the register are made available to potential users. It should also specify any limits to the scope of the register and identify the types of applications for which the items are intended.</description>
     </element>
@@ -2452,11 +2452,15 @@
         <label>Register Item Class</label>
         <description>Provides characteristics of the class of items in the register. Almost always this will be grg:RE_ItemClass or an extension of this class.</description>
     </element>
-        <element name="grg:RE_ItemClass">
+    <element name="grg:RE_ItemClass">
         <label>Register Item Class</label>
         <description>Provides characteristics of the class of items in the register.</description>
     </element>
-        <element name="grg:technicalStandard">
+    <element name="grg:name" context="grg:RE_ItemClass">
+        <label>Item class</label>
+        <description>Item class</description>
+    </element>
+    <element name="grg:technicalStandard">
         <label>Technical Standard</label>
         <description>Citation for technical standard (and the specific portion thereof) to which items in the item class shall conform.</description>
     </element>
