@@ -213,8 +213,8 @@
 
           <!-- and create field for none translated language -->
           <xsl:for-each select="$metadataOtherLanguages/lang">
-            <xsl:variable name="currentLanguageId" select="@id"/>
             <!-- FIXME
+            <xsl:variable name="currentLanguageId" select="@id"/>
             <xsl:if test="count($theElement/parent::node()/
                 gmd:PT_FreeText/gmd:textGroup/
                 gmd:LocalisedCharacterString[@locale = concat('#',$currentLanguageId)]) = 0">

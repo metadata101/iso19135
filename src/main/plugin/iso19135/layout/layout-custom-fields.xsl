@@ -13,11 +13,20 @@
 
   <!-- Simply show the full content of the list -->
   <xsl:template name="iso19135-list-full-content">
-    <!-- Display items according to the letter -->
-    <xsl:apply-templates
-        select="$metadata//grg:containedItem"
-        mode="mode-iso19135"
-        />
+    <xsl:apply-templates select="$metadata//grg:containedItem"
+        mode="mode-iso19135" />
+  </xsl:template>
+
+  <xsl:template name="iso19135-list-full-content-index">
+    <xsl:variable name="items" select="$metadata//grg:RE_RegisterItem/grg:name/gco:CharacterString"/>
+    <h3>
+        <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'codeListIndexDropbox', $labels)/label"/>
+    </h3>
+    <ul>
+      <xsl:for-each select="$items">
+        <li><a data-ng-click="scrollTo({position()})" class="ng-binding"> <xsl:value-of select="."/> </a></li>
+      </xsl:for-each>
+    </ul>
   </xsl:template> 
 
   <!-- Create a table of content of list of items
@@ -63,13 +72,12 @@
         select="$metadata//grg:containedItem[starts-with(grg:RE_RegisterItem/grg:name/gco:CharacterString, $currentLetter)]"
         mode="mode-iso19135"
         />
-  </xsl:template> 
-  
+  </xsl:template>
+
   <!-- TODO : improve editor in simple mode -->
   <xsl:template mode="mode-iso19135"
                 match="grg:fieldOfApplication[$tab='default']"
-                priority="2000"
-      ></xsl:template>
+                priority="2000"></xsl:template>
 
   <xsl:template mode="mode-iso19135"
                 match="grg:specificationLineage[$tab='default']"
