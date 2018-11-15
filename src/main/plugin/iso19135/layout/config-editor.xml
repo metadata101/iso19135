@@ -56,7 +56,7 @@
         <section>
           <field xpath="/grg:RE_Register/grg:name"/>
           <field xpath="/grg:RE_Register/grg:contentSummary"/>
-          <section template="iso19135-table-of-content"/>
+          <section template="iso19135-list-full-content" />
           <!--<section name="concepts"
                    xpath="/grg:RE_Register/grg:containedItem"
                     or="containedItem"

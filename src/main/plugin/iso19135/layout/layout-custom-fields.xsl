@@ -11,6 +11,15 @@
                 exclude-result-prefixes="#all">
 
 
+  <!-- Simply show the full content of the list -->
+  <xsl:template name="iso19135-list-full-content">
+    <!-- Display items according to the letter -->
+    <xsl:apply-templates
+        select="$metadata//grg:containedItem"
+        mode="mode-iso19135"
+        />
+  </xsl:template> 
+
   <!-- Create a table of content of list of items
 
   TODO: Create a TOC based on status ?
@@ -24,6 +33,7 @@
                               starts-with(grg:name/gco:CharacterString, $requestParameters/tocIndex)]) > 0)
                           then $requestParameters/tocIndex
                           else substring(upper-case($items[1]), 1, 1)"/>
+
 
     <xsl:for-each-group select="$items"
                         group-by="substring(upper-case(.), 1, 1)">
@@ -53,9 +63,8 @@
         select="$metadata//grg:containedItem[starts-with(grg:RE_RegisterItem/grg:name/gco:CharacterString, $currentLetter)]"
         mode="mode-iso19135"
         />
-  </xsl:template>
-
-
+  </xsl:template> 
+  
   <!-- TODO : improve editor in simple mode -->
   <xsl:template mode="mode-iso19135"
                 match="grg:fieldOfApplication[$tab='default']"
