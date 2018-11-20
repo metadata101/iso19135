@@ -25,7 +25,8 @@
     </h3>
     <ul>
       <xsl:for-each select="$items">
-        <li><!--  <a onclick="window.find('Test',0,0,0,0,0,1)" >  --><xsl:value-of select="."/></li>
+        <xsl:variable name="ref" select="../../../gn:element/@ref" />
+        <li><a onclick="document.getElementById('gn-el-{$ref}').scrollIntoView();" ><xsl:value-of select="."/></a></li>
       </xsl:for-each>
     </ul>
   </xsl:template> 
