@@ -15,7 +15,9 @@
 	<status>Item Status</status>
 	<definition>Definition</definition>
 	<itemclass>Item Class</itemclass>
-
+    <containedItem>Register Item</containedItem>
+    <id>Id</id>
+    <xlink>XLink</xlink>
 
 
   <advanced>Full</advanced>

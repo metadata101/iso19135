@@ -17,11 +17,9 @@
     <for name="gco:Integer" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
 
-
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
   </fields>
-
 
   <fieldsWithFieldset>
     <name>grg:containedItem</name>
@@ -58,11 +56,14 @@
           <field xpath="/grg:RE_Register/grg:contentSummary"/>
 
           <field name="containedItem"
+                 forceLabel="true"
                  xpath="/grg:RE_Register/grg:containedItem"
                  templateModeOnly="true">
             <template>
               <values>
                 <key label="name" required="true" xpath="grg:RE_RegisterItem/grg:name/gco:CharacterString" tooltip="grg:name" />
+                <key label="id" xpath="@id" tooltip="id" />
+                <key label="xlink" xpath="@xlink:href" tooltip="xlink:href" />
                 <key label="status" xpath="grg:RE_RegisterItem/grg:status/grg:RE_ItemStatus" tooltip="grg:RE_ItemStatus">
                   <codelist name="grg:RE_ItemStatus"/>
                 </key>
@@ -70,7 +71,7 @@
                 <key label="itemclass" required="true" xpath="grg:RE_RegisterItem/grg:itemClass/grg:RE_ItemClass/grg:name/gco:CharacterString" tooltip="grg:itemClass" />
               </values>
               <snippet>
-                <grg:containedItem>
+                <grg:containedItem id="{{id}}" xlink:href="{{xlink}}">
                   <grg:RE_RegisterItem>
                     <gn:copy select="grg:itemIdentifier"/>
                   <grg:name>

@@ -25,7 +25,7 @@
     </h3>
     <ul>
       <xsl:for-each select="$items">
-        <li><xsl:value-of select="."/></li>
+        <li><!--  <a onclick="window.find('Test',0,0,0,0,0,1)" >  --><xsl:value-of select="."/></li>
       </xsl:for-each>
     </ul>
   </xsl:template> 
