@@ -8,23 +8,24 @@
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
 
 
   <!-- Simply show the full content of the list -->
   <xsl:template name="iso19135-list-full-content">
-    <xsl:apply-templates select="$metadata//grg:containedItem"
+    <xsl:apply-templates select="$metadata//grg:containedItem[not(@xlink:href)]"
         mode="mode-iso19135" />
   </xsl:template>
 
   <xsl:template name="iso19135-list-full-content-index">
     <xsl:variable name="items" select="$metadata//grg:RE_RegisterItem/grg:name/gco:CharacterString"/>
     <h3>
-        <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'codeListIndexDropbox', $labels)/label"/>
+        <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'codeListIndexSide', $labels)/label"/>
     </h3>
     <ul>
       <xsl:for-each select="$items">
-        <li><a data-ng-click="scrollTo({position()})" class="ng-binding"> <xsl:value-of select="."/> </a></li>
+        <li><xsl:value-of select="."/></li>
       </xsl:for-each>
     </ul>
   </xsl:template> 

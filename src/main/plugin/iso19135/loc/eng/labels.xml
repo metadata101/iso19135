@@ -2572,4 +2572,12 @@
         <label>URL (GeoNetwork)</label>
         <description>An online resource associated with the register item.</description>
     </element>
+    <element name="codeListIndexSide">
+        <label>Code list</label>
+        <description>A list of items.</description>
+    </element>
+    <element name="grgname">
+        <label>Name</label>
+        <description>Item name.</description>
+    </element>
 </labels>

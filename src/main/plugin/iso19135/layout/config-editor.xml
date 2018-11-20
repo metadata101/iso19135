@@ -42,7 +42,6 @@
     </exclude>
   </multilingualFields>
 
-
   <!-- View configuration -->
   <views>
     <view name="default">
@@ -57,11 +56,49 @@
         <section>
           <field xpath="/grg:RE_Register/grg:name"/>
           <field xpath="/grg:RE_Register/grg:contentSummary"/>
-          <section template="iso19135-list-full-content" />
-          <!--<section name="concepts"
-                   xpath="/grg:RE_Register/grg:containedItem"
-                    or="containedItem"
-                    in="/grg:RE_Register"/>-->
+
+          <field name="containedItem"
+                 xpath="/grg:RE_Register/grg:containedItem"
+                 templateModeOnly="true">
+            <template>
+              <values>
+                <key label="name" required="true" xpath="grg:RE_RegisterItem/grg:name/gco:CharacterString" tooltip="grg:name" />
+                <key label="status" xpath="grg:RE_RegisterItem/grg:status/grg:RE_ItemStatus" tooltip="grg:RE_ItemStatus">
+                  <codelist name="grg:RE_ItemStatus"/>
+                </key>
+                <key label="definition" use="textarea" equired="true" xpath="grg:RE_RegisterItem/grg:definition/gco:CharacterString" tooltip="grg:definition" />
+                <key label="itemclass" required="true" xpath="grg:RE_RegisterItem/grg:itemClass/grg:RE_ItemClass/grg:name/gco:CharacterString" tooltip="grg:itemClass" />
+              </values>
+              <snippet>
+                <grg:containedItem>
+                  <grg:RE_RegisterItem>
+                    <gn:copy select="grg:itemIdentifier"/>
+                  <grg:name>
+                      <gco:CharacterString>{{name}}</gco:CharacterString>
+                  </grg:name>
+                  <grg:status>
+                    <grg:RE_ItemStatus>{{status}}</grg:RE_ItemStatus>
+                  </grg:status>
+                  <gn:copy select="grg:dateAccepted"/>
+                    <grg:definition>
+                      <gco:CharacterString>{{definition}}</gco:CharacterString>
+                    </grg:definition>
+                    <grg:itemClass>
+                      <grg:RE_ItemClass>
+                        <grg:name>
+                          <gco:CharacterString>{{itemclass}}</gco:CharacterString>
+                        </grg:name>
+                        <gn:copy select="grg:technicalStandard"/>
+                        <gn:copy select="grg:alternativeNames"/>
+                        <gn:copy select="grg:describedItem"/>
+                      </grg:RE_ItemClass>
+                    </grg:itemClass>
+                    <gn:copy select="grg:specificationLineage"/>
+                </grg:RE_RegisterItem>
+              </grg:containedItem>
+            </snippet>
+            </template>
+          </field>
 
           <action type="add" name="addItem"
                   or="containedItem" in="/grg:RE_Register">
@@ -78,29 +115,25 @@
                     <grg:status>
                       <grg:RE_ItemStatus></grg:RE_ItemStatus>
                     </grg:status>
-                    <grg:dateAccepted>
-                      <gco:Date></gco:Date>
-                    </grg:dateAccepted>
                     <grg:definition>
                       <gco:CharacterString></gco:CharacterString>
                     </grg:definition>
-                    <grg:specificationLineage>
-                      <grg:RE_Reference>
-                        <grg:itemIdentifierAtSource>
-                          <gco:CharacterString/>
-                        </grg:itemIdentifierAtSource>
-                        <grg:similarity>
-                          <grg:RE_SimilarityToSource codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#RE_SimilarityToSource"
-                                                     codeListValue=""/>
-                        </grg:similarity>
-                        <grg:sourceCitation/>
-                      </grg:RE_Reference>
-                    </grg:specificationLineage>
+                    <grg:itemClass>
+                      <grg:RE_ItemClass>
+                        <grg:name>
+                          <gco:CharacterString></gco:CharacterString>
+                        </grg:name>
+                        <gn:copy select="grg:technicalStandard"/>
+                        <gn:copy select="grg:alternativeNames"/>
+                        <gn:copy select="grg:describedItem"/>
+                      </grg:RE_ItemClass>
+                    </grg:itemClass>
                   </grg:RE_RegisterItem>
                 </grg:containedItem>
               </snippet>
             </template>
           </action>
+
         </section>
       </tab>
     </view>
