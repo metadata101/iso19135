@@ -7,10 +7,25 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:gmd="http://www.isotc211.org/2005/gmd"
    xmlns:grg="http://www.isotc211.org/2005/grg"
-   xmlns:gnreg="http://geonetwork-opensource.org/register"
-	 exclude-result-prefixes="gmd">
+   exclude-result-prefixes="#all">
 
 	<xsl:include href="convert/functions.xsl"/>
+
+	<!-- generateUniformResourceIdentifier: default value 'false', if set to 'true':
+
+        - /grg:RE_Register/grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage/gmd:URL gets the value
+          from the url configured in "uniformResourceIdentifierUrlPrefix" and grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code
+
+          Example: <gmd:URL>http://metadatacatalogue/resources/codelistid</gmd:URL>
+
+        - /grg:RE_Register/grp:containedItem gets the value for "xlink:href" attribute from the "id" attribute, concatenated with
+          grg:RE_Register/grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage/gmd:URL
+
+
+          Example: <grp:containedItem id="itemid1" xlink:href="http://metadatacatalogue/resources/codelistid/itemid1">
+  -->
+  <xsl:variable name="uniformResourceIdentifierUrlPrefix">http://metadatacatalogue/resources</xsl:variable>
+  <xsl:variable name="generateUniformResourceIdentifier">false</xsl:variable>
 
 	<!-- ================================================================= -->
 
@@ -47,6 +62,47 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+	<!-- ================================================================= -->
+
+	<xsl:template match="grg:containedItem">
+		<xsl:choose>
+		  <xsl:when test="$generateUniformResourceIdentifier = 'true'">
+        <xsl:variable name="identifier" select="//grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" />
+        <xsl:copy>
+          <xsl:copy-of select="@*[name() != 'xlink:href']" />
+          <xsl:attribute name="xlink:href" select="concat($uniformResourceIdentifierUrlPrefix, '/', $identifier, '/', @id)" />
+
+          <xsl:apply-templates select="*" />
+        </xsl:copy>
+		  </xsl:when>
+		  <xsl:otherwise>
+			  <xsl:copy>
+          <xsl:copy-of select="@*" />
+          <xsl:apply-templates select="*" />
+        </xsl:copy>
+		  </xsl:otherwise>
+		</xsl:choose>
+    </xsl:template>
+
+    <!-- ================================================================= -->
+
+    <xsl:template match="grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
+      <xsl:choose>
+        <xsl:when test="$generateUniformResourceIdentifier = 'true'">
+          <xsl:variable name="identifier" select="//grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" />
+          <gmd:URL>
+            <xsl:value-of select="concat($uniformResourceIdentifierUrlPrefix, '/', $identifier)" />
+          </gmd:URL>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:copy>
+            <xsl:copy-of select="@*" />
+            <xsl:apply-templates select="*" />
+          </xsl:copy>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
 
 	<!-- ================================================================= -->
 
