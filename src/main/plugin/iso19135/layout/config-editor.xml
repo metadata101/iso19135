@@ -24,6 +24,9 @@
   <fieldsWithFieldset>
     <name>grg:containedItem</name>
     <name>grg:fieldOfApplication</name>
+    <name>grg:owner</name>
+    <name>grg:submitter</name>
+    <name>grg:manager</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
@@ -51,10 +54,54 @@
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
-        <section>
+        <section name="registerTab">
           <field xpath="/grg:RE_Register/grg:name"/>
           <field xpath="/grg:RE_Register/grg:contentSummary"/>
 
+          <field xpath="/grg:RE_Register/grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
+
+          <action name="addIdentifier"
+                  if="count(grg:citation/gmd:CI_Citation/gmd:identifier) = 0">
+            <template>
+              <grg:citation>
+                <gmd:CI_Citation>
+                  <gmd:identifier>
+                    <gmd:MD_Identifier>
+                      <gmd:code>
+                        <gco:CharacterString></gco:CharacterString>
+                      </gmd:code>
+                    </gmd:MD_Identifier>
+                  </gmd:identifier>
+                </gmd:CI_Citation>
+              </grg:citation>
+            </template>
+          </action>
+
+          <field xpath="/grg:RE_Register/grg:owner"/>
+
+          <action name="addRegisterOwner"
+                  if="count(grg:owner) = 0">
+            <template>
+              <grg:owner>
+                <grg:RE_RegisterOwner>
+                  <grg:name>
+                    <gco:CharacterString></gco:CharacterString>
+                  </grg:name>
+                  <grg:contact>
+                    <gmd:CI_ResponsibleParty>
+                      <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode"
+                                         codeListValue="owner"/>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </grg:contact>
+                </grg:RE_RegisterOwner>
+              </grg:owner>
+            </template>
+          </action>
+        </section>
+
+        <section name="registerItemsTab">
           <field name="containedItem"
                  forceLabel="true"
                  xpath="/grg:RE_Register/grg:containedItem"
@@ -63,7 +110,7 @@
               <values>
                 <key label="name" required="true" xpath="grg:RE_RegisterItem/grg:name/gco:CharacterString" tooltip="grg:name" />
                 <key label="id" xpath="@id" tooltip="id" />
-                <key label="xlink" xpath="@xlink:href" tooltip="xlink:href" />
+                <!--<key label="xlink" xpath="@xlink:href" tooltip="xlink:href" />-->
                 <key label="status" xpath="grg:RE_RegisterItem/grg:status/grg:RE_ItemStatus" tooltip="grg:RE_ItemStatus">
                   <codelist name="grg:RE_ItemStatus"/>
                 </key>
@@ -71,7 +118,7 @@
                 <key label="itemclass" required="true" xpath="grg:RE_RegisterItem/grg:itemClass/grg:RE_ItemClass/grg:name/gco:CharacterString" tooltip="grg:itemClass" />
               </values>
               <snippet>
-                <grg:containedItem id="{{id}}" xlink:href="{{xlink}}">
+                <grg:containedItem id="{{id}}">
                   <grg:RE_RegisterItem>
                     <gn:copy select="grg:itemIdentifier"/>
                   <grg:name>
