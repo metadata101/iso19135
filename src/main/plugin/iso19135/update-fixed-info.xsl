@@ -83,26 +83,26 @@
         </xsl:copy>
 		  </xsl:otherwise>
 		</xsl:choose>
-    </xsl:template>
+  </xsl:template>
 
     <!-- ================================================================= -->
 
-    <xsl:template match="grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
-      <xsl:choose>
-        <xsl:when test="$generateUniformResourceIdentifier = 'true'">
-          <xsl:variable name="identifier" select="//grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" />
-          <gmd:URL>
-            <xsl:value-of select="concat($uniformResourceIdentifierUrlPrefix, '/', $identifier)" />
-          </gmd:URL>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:copy>
-            <xsl:copy-of select="@*" />
-            <xsl:apply-templates select="*" />
-          </xsl:copy>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:template>
+  <xsl:template match="grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage/gmd:URL">
+    <xsl:choose>
+      <xsl:when test="$generateUniformResourceIdentifier = 'true'">
+        <xsl:variable name="identifier" select="//grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString" />
+        <gmd:URL>
+          <xsl:value-of select="concat($uniformResourceIdentifierUrlPrefix, '/', $identifier)" />
+        </gmd:URL>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:copy>
+          <xsl:copy-of select="@*" />
+          <xsl:apply-templates select="*" />
+        </xsl:copy>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 	<!-- ================================================================= -->
 

@@ -57,7 +57,6 @@
         <section name="registerTab">
           <field xpath="/grg:RE_Register/grg:name"/>
           <field xpath="/grg:RE_Register/grg:contentSummary"/>
-
           <field xpath="/grg:RE_Register/grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
 
           <action name="addIdentifier"
@@ -76,6 +75,9 @@
               </grg:citation>
             </template>
           </action>
+
+          <field xpath="/grg:RE_Register/grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage"/>
+
 
           <field xpath="/grg:RE_Register/grg:owner"/>
 
@@ -185,6 +187,74 @@
         </section>
       </tab>
     </view>
+
+    <!-- Enable the following view to provide a TOC of items, intended for very long codelists, as
+      the TOC Filters only the elements starting with the selected letter.
+
+      Format:
+       ITEM NAME FIRST LETTER (COUNT) - ITEM NAME FIRST LETTER (COUNT) - ...
+
+      Requires to click the Save Metadata button to refresh the editor once selected an item (TO IMPROVE).
+     -->
+    <view name="toc" disabled="true">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="toc" default="true" mode="flat">
+        <section>
+          <field xpath="/grg:RE_Register/grg:name"/>
+          <field xpath="/grg:RE_Register/grg:contentSummary"/>
+          <section template="iso19135-table-of-content"/>
+          <!--<section name="concepts"
+                   xpath="/grg:RE_Register/grg:containedItem"
+                    or="containedItem"
+                    in="/grg:RE_Register"/>-->
+
+          <action type="add" name="addItem"
+                  or="containedItem" in="/grg:RE_Register">
+            <template>
+              <snippet>
+                <grg:containedItem>
+                  <grg:RE_RegisterItem>
+                    <grg:itemIdentifier>
+                      <gco:Integer>1</gco:Integer>
+                    </grg:itemIdentifier>
+                    <grg:name>
+                      <gco:CharacterString>-</gco:CharacterString>
+                    </grg:name>
+                    <grg:status>
+                      <grg:RE_ItemStatus></grg:RE_ItemStatus>
+                    </grg:status>
+                    <grg:dateAccepted>
+                      <gco:Date></gco:Date>
+                    </grg:dateAccepted>
+                    <grg:definition>
+                      <gco:CharacterString></gco:CharacterString>
+                    </grg:definition>
+                    <grg:specificationLineage>
+                      <grg:RE_Reference>
+                        <grg:itemIdentifierAtSource>
+                          <gco:CharacterString/>
+                        </grg:itemIdentifierAtSource>
+                        <grg:similarity>
+                          <grg:RE_SimilarityToSource codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#RE_SimilarityToSource"
+                                                     codeListValue=""/>
+                        </grg:similarity>
+                        <grg:sourceCitation/>
+                      </grg:RE_Reference>
+                    </grg:specificationLineage>
+                  </grg:RE_RegisterItem>
+                </grg:containedItem>
+              </snippet>
+            </template>
+          </action>
+        </section>
+      </tab>
+    </view>
+
     <view name="advanced">
       <tab id="advanced">
         <section xpath="/grg:RE_Register"/>
