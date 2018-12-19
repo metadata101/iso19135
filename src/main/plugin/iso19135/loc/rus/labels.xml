@@ -2397,6 +2397,14 @@
     <label>Metadata uuid</label>
     <description>Unique identifier</description>
   </element>
+  <element name="uuid">
+    <label>Metadata uuid</label>
+    <description>Unique identifier</description>
+  </element>
+  <element name="xlink:href">
+    <label>Resource reference</label>
+    <description>Resource reference</description>
+  </element>
   <element name="uom">
     <label>Units of measure</label>
     <description/>

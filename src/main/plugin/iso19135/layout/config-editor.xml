@@ -27,6 +27,9 @@
     <name>grg:owner</name>
     <name>grg:submitter</name>
     <name>grg:manager</name>
+    <name>grg:itemClass</name>
+    <name>grg:containedItemClass</name>
+    <name>grg:operatingLanguage</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
