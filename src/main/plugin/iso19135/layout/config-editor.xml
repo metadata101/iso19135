@@ -17,15 +17,19 @@
     <for name="gco:Integer" use="number"/>
     <for name="gco:Boolean" use="checkbox"/>
 
-
     <for name="gco:Date" use="data-gn-date-picker"/>
     <for name="gco:DateTime" use="data-gn-date-picker"/>
   </fields>
 
-
   <fieldsWithFieldset>
     <name>grg:containedItem</name>
     <name>grg:fieldOfApplication</name>
+    <name>grg:owner</name>
+    <name>grg:submitter</name>
+    <name>grg:manager</name>
+    <name>grg:itemClass</name>
+    <name>grg:containedItemClass</name>
+    <name>grg:operatingLanguage</name>
   </fieldsWithFieldset>
 
   <multilingualFields>
@@ -42,17 +46,167 @@
     </exclude>
   </multilingualFields>
 
-
   <!-- View configuration -->
   <views>
     <view name="default">
       <sidePanel>
         <directive data-gn-validation-report=""/>
         <directive data-gn-suggestion-list=""/>
+        <section template="iso19135-list-full-content-index" />
         <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
       </sidePanel>
 
       <tab id="default" default="true" mode="flat">
+        <section name="registerTab">
+          <field xpath="/grg:RE_Register/grg:name"/>
+          <field xpath="/grg:RE_Register/grg:contentSummary"/>
+          <field xpath="/grg:RE_Register/grg:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
+
+          <action name="addIdentifier"
+                  if="count(grg:citation/gmd:CI_Citation/gmd:identifier) = 0">
+            <template>
+              <grg:citation>
+                <gmd:CI_Citation>
+                  <gmd:identifier>
+                    <gmd:MD_Identifier>
+                      <gmd:code>
+                        <gco:CharacterString></gco:CharacterString>
+                      </gmd:code>
+                    </gmd:MD_Identifier>
+                  </gmd:identifier>
+                </gmd:CI_Citation>
+              </grg:citation>
+            </template>
+          </action>
+
+          <field xpath="/grg:RE_Register/grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage"/>
+
+
+          <field xpath="/grg:RE_Register/grg:owner"/>
+
+          <action name="addRegisterOwner"
+                  if="count(grg:owner) = 0">
+            <template>
+              <grg:owner>
+                <grg:RE_RegisterOwner>
+                  <grg:name>
+                    <gco:CharacterString></gco:CharacterString>
+                  </grg:name>
+                  <grg:contact>
+                    <gmd:CI_ResponsibleParty>
+                      <gmd:role>
+                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode"
+                                         codeListValue="owner"/>
+                      </gmd:role>
+                    </gmd:CI_ResponsibleParty>
+                  </grg:contact>
+                </grg:RE_RegisterOwner>
+              </grg:owner>
+            </template>
+          </action>
+        </section>
+
+        <section name="registerItemsTab">
+          <field name="containedItem"
+                 forceLabel="true"
+                 xpath="/grg:RE_Register/grg:containedItem"
+                 templateModeOnly="true">
+            <template>
+              <values>
+                <key label="name" required="true" xpath="grg:RE_RegisterItem/grg:name/gco:CharacterString" tooltip="grg:name" />
+                <key label="id" xpath="@id" tooltip="id" />
+                <!--<key label="xlink" xpath="@xlink:href" tooltip="xlink:href" />-->
+                <key label="status" xpath="grg:RE_RegisterItem/grg:status/grg:RE_ItemStatus" tooltip="grg:RE_ItemStatus">
+                  <codelist name="grg:RE_ItemStatus"/>
+                </key>
+                <key label="definition" use="textarea" equired="true" xpath="grg:RE_RegisterItem/grg:definition/gco:CharacterString" tooltip="grg:definition" />
+                <key label="itemclass" required="true" xpath="grg:RE_RegisterItem/grg:itemClass/grg:RE_ItemClass/grg:name/gco:CharacterString" tooltip="grg:itemClass" />
+              </values>
+              <snippet>
+                <grg:containedItem id="{{id}}">
+                  <grg:RE_RegisterItem>
+                    <gn:copy select="grg:itemIdentifier"/>
+                  <grg:name>
+                      <gco:CharacterString>{{name}}</gco:CharacterString>
+                  </grg:name>
+                  <grg:status>
+                    <grg:RE_ItemStatus>{{status}}</grg:RE_ItemStatus>
+                  </grg:status>
+                  <gn:copy select="grg:dateAccepted"/>
+                    <grg:definition>
+                      <gco:CharacterString>{{definition}}</gco:CharacterString>
+                    </grg:definition>
+                    <grg:itemClass>
+                      <grg:RE_ItemClass>
+                        <grg:name>
+                          <gco:CharacterString>{{itemclass}}</gco:CharacterString>
+                        </grg:name>
+                        <gn:copy select="grg:technicalStandard"/>
+                        <gn:copy select="grg:alternativeNames"/>
+                        <gn:copy select="grg:describedItem"/>
+                      </grg:RE_ItemClass>
+                    </grg:itemClass>
+                    <gn:copy select="grg:specificationLineage"/>
+                </grg:RE_RegisterItem>
+              </grg:containedItem>
+            </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="addItem"
+                  or="containedItem" in="/grg:RE_Register">
+            <template>
+              <snippet>
+                <grg:containedItem>
+                  <grg:RE_RegisterItem>
+                    <grg:itemIdentifier>
+                      <gco:Integer>1</gco:Integer>
+                    </grg:itemIdentifier>
+                    <grg:name>
+                      <gco:CharacterString>-</gco:CharacterString>
+                    </grg:name>
+                    <grg:status>
+                      <grg:RE_ItemStatus></grg:RE_ItemStatus>
+                    </grg:status>
+                    <grg:definition>
+                      <gco:CharacterString></gco:CharacterString>
+                    </grg:definition>
+                    <grg:itemClass>
+                      <grg:RE_ItemClass>
+                        <grg:name>
+                          <gco:CharacterString></gco:CharacterString>
+                        </grg:name>
+                        <gn:copy select="grg:technicalStandard"/>
+                        <gn:copy select="grg:alternativeNames"/>
+                        <gn:copy select="grg:describedItem"/>
+                      </grg:RE_ItemClass>
+                    </grg:itemClass>
+                  </grg:RE_RegisterItem>
+                </grg:containedItem>
+              </snippet>
+            </template>
+          </action>
+
+        </section>
+      </tab>
+    </view>
+
+    <!-- Enable the following view to provide a TOC of items, intended for very long codelists, as
+      the TOC Filters only the elements starting with the selected letter.
+
+      Format:
+       ITEM NAME FIRST LETTER (COUNT) - ITEM NAME FIRST LETTER (COUNT) - ...
+
+      Requires to click the Save Metadata button to refresh the editor once selected an item (TO IMPROVE).
+     -->
+    <view name="toc" disabled="true">
+      <sidePanel>
+        <directive data-gn-validation-report=""/>
+        <directive data-gn-suggestion-list=""/>
+        <directive data-gn-need-help="user-guide/describing-information/creating-metadata.html"/>
+      </sidePanel>
+
+      <tab id="toc" default="true" mode="flat">
         <section>
           <field xpath="/grg:RE_Register/grg:name"/>
           <field xpath="/grg:RE_Register/grg:contentSummary"/>
@@ -103,6 +257,7 @@
         </section>
       </tab>
     </view>
+
     <view name="advanced">
       <tab id="advanced">
         <section xpath="/grg:RE_Register"/>

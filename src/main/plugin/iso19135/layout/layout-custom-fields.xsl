@@ -3,13 +3,56 @@
                 xmlns:grg="http://www.isotc211.org/2005/grg"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
                 xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
                 xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
 
+
+  <!-- Readonly -->
+  <xsl:template mode="mode-iso19135" priority="200"
+                match="grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage[gmd:URL]">
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig"
+                  select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label"
+                      select="$labelConfig"/>
+      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="name" select="''"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="isDisabled" select="true()"/>
+    </xsl:call-template>
+  </xsl:template>
+
+  <!-- Simply show the full content of the list -->
+  <xsl:template name="iso19135-list-full-content">
+    <xsl:apply-templates select="$metadata//grg:containedItem[not(@xlink:href)]"
+        mode="mode-iso19135" />
+  </xsl:template>
+
+  <xsl:template name="iso19135-list-full-content-index">
+    <xsl:variable name="items" select="$metadata//grg:RE_RegisterItem/grg:name/gco:CharacterString"/>
+    <h3>
+        <xsl:value-of select="gn-fn-metadata:getLabel($schema, 'codeListIndexSide', $labels)/label"/>
+    </h3>
+    <ul>
+      <xsl:for-each select="$items">
+        <xsl:variable name="ref" select="../../../gn:element/@ref" />
+        <li><a onclick="document.getElementById('gn-el-{$ref}').scrollIntoView();" ><xsl:value-of select="."/></a></li>
+      </xsl:for-each>
+    </ul>
+  </xsl:template> 
 
   <!-- Create a table of content of list of items
 
@@ -24,6 +67,7 @@
                               starts-with(grg:name/gco:CharacterString, $requestParameters/tocIndex)]) > 0)
                           then $requestParameters/tocIndex
                           else substring(upper-case($items[1]), 1, 1)"/>
+
 
     <xsl:for-each-group select="$items"
                         group-by="substring(upper-case(.), 1, 1)">
@@ -55,12 +99,10 @@
         />
   </xsl:template>
 
-
   <!-- TODO : improve editor in simple mode -->
   <xsl:template mode="mode-iso19135"
                 match="grg:fieldOfApplication[$tab='default']"
-                priority="2000"
-      ></xsl:template>
+                priority="2000"></xsl:template>
 
   <xsl:template mode="mode-iso19135"
                 match="grg:specificationLineage[$tab='default']"

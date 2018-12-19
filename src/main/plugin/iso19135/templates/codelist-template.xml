@@ -75,6 +75,17 @@
          </grg:name>
       </grg:RE_SubmittingOrganization>
    </grg:submitter>
+  <grg:citation>
+    <gmd:CI_Citation>
+      <gmd:identifier>
+        <gmd:MD_Identifier>
+          <gmd:code>
+            <gco:CharacterString></gco:CharacterString>
+          </gmd:code>
+        </gmd:MD_Identifier>
+      </gmd:identifier>
+    </gmd:CI_Citation>
+  </grg:citation>
    <grg:containedItemClass>
 	 	<grg:RE_ItemClass>
      	<grg:name>
