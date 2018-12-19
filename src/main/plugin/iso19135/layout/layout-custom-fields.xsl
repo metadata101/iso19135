@@ -3,7 +3,6 @@
                 xmlns:grg="http://www.isotc211.org/2005/grg"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
-                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
