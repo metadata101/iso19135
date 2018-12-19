@@ -15,13 +15,13 @@
 	<status>Item Status</status>
 	<definition>Definition</definition>
 	<itemclass>Item Class</itemclass>
-    <containedItem>Register Item</containedItem>
-    <id>Id</id>
-    <xlink>XLink</xlink>
-
+  <containedItem>Register Item</containedItem>
+  <id>Id</id>
+  <xlink>XLink</xlink>
 
   <advanced>Full</advanced>
   <default>Register</default>
+  <toc>Register (TOC)</toc>
   <xml>XML</xml>
   <addItem>Add item</addItem>
 </strings>

@@ -3,6 +3,7 @@
                 xmlns:grg="http://www.isotc211.org/2005/grg"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
@@ -11,6 +12,28 @@
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
 
+
+  <!-- Readonly -->
+  <xsl:template mode="mode-iso19135" priority="200"
+                match="grg:uniformResourceIdentifier/gmd:CI_OnlineResource/gmd:linkage[gmd:URL]">
+    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
+    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="labelConfig"
+                  select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)"/>
+
+    <xsl:call-template name="render-element">
+      <xsl:with-param name="label"
+                      select="$labelConfig"/>
+      <xsl:with-param name="value" select="*"/>
+      <xsl:with-param name="cls" select="local-name()"/>
+      <xsl:with-param name="xpath" select="$xpath"/>
+      <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
+      <xsl:with-param name="name" select="''"/>
+      <xsl:with-param name="editInfo" select="*/gn:element"/>
+      <xsl:with-param name="parentEditInfo" select="gn:element"/>
+      <xsl:with-param name="isDisabled" select="true()"/>
+    </xsl:call-template>
+  </xsl:template>
 
   <!-- Simply show the full content of the list -->
   <xsl:template name="iso19135-list-full-content">
